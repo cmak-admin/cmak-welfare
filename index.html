@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Only this shell's own files and Google's Apps Script frames may load. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src https://script.google.com https://*.googleusercontent.com; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>CMAK Welfare — St. Veronica, Syokimau</title>
+<meta name="description" content="C.M.A.K St. Veronica Catholic Parish, Syokimau — welfare register for members and office bearers.">
+<meta name="theme-color" content="#0B1B33">
+<meta name="application-name" content="CMAK Welfare">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CMAK Welfare">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="shell.css">
+<script src="config.js"></script>
+<script src="shell.js" defer></script>
+</head>
+<body>
+  <div id="bar" class="bar" hidden>
+    <img src="icons/favicon-32.png" width="20" height="20" alt="">
+    <span id="barText">Install CMAK Welfare on this device</span>
+    <button id="installBtn" type="button" hidden>Install</button>
+    <button id="howBtn" type="button" hidden>How?</button>
+    <button id="barClose" type="button" aria-label="Dismiss">&times;</button>
+  </div>
+
+  <main id="stage">
+    <iframe id="app" title="CMAK Welfare register" allow="clipboard-write; fullscreen" referrerpolicy="no-referrer"></iframe>
+    <div id="splash" class="cover" role="status" aria-live="polite">
+      <img src="icons/emblem-mark-256.png" width="96" height="96" alt="Catholic Men Association of Kenya">
+      <p class="t1">CMAK Welfare</p>
+      <p class="t2" id="splashText">Opening the welfare register…</p>
+    </div>
+    <div id="offline" class="cover" hidden role="alert">
+      <img src="icons/emblem-mark-256.png" width="72" height="72" alt="">
+      <p class="t1">You are offline</p>
+      <p class="t2">The register is kept online so every figure is current. Nothing is stored on this device. It will reopen when you are connected.</p>
+      <button id="retryBtn" type="button">Try again</button>
+    </div>
+    <div id="setupMsg" class="cover" hidden role="alert">
+      <p class="t1">Not configured</p>
+      <p class="t2">Set the Apps Script web-app address in <code>config.js</code>.</p>
+    </div>
+  </main>
+
+  <div id="iosHelp" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="iosT">
+    <div class="sheet__in">
+      <p class="t1" id="iosT">Add to your Home Screen</p>
+      <ol>
+        <li>Tap the <b>Share</b> button in Safari’s toolbar.</li>
+        <li>Choose <b>Add to Home Screen</b>.</li>
+        <li>Keep the name “CMAK Welfare” and tap <b>Add</b>.</li>
+      </ol>
+      <p class="t2">On iPhone and iPad this works from Safari only.</p>
+      <button id="iosClose" type="button">Done</button>
+    </div>
+  </div>
+</body>
+</html>

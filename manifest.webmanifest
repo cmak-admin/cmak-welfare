@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "CMAK Welfare — St. Veronica, Syokimau",
+  "short_name": "CMAK Welfare",
+  "description": "Welfare register of the Catholic Men Association of Kenya, St. Veronica Catholic Parish, Syokimau.",
+  "start_url": "./?source=installed",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0B1B33",
+  "theme_color": "#0B1B33",
+  "lang": "en-KE",
+  "categories": ["finance", "productivity", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
