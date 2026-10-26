@@ -3,5 +3,5 @@
    Keep the deployment ID the same when you publish new versions, so this
    never has to change. */
 window.CMAK_CONFIG = {
-  appsScriptUrl: 'https://script.google.com/macros/s/REPLACE_WITH_DEPLOYMENT_ID/exec'
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbyHD9XnGeEiattGRodtFyQshMqlQS1uHi6GKXPTHoH57OQCJNrLeVDXzlTFGutcdTKiVg/exec'
 };
