@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CMAK Operations Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="CMAK Operations Hub — St. Veronica Catholic Parish, Syokimau (officials only)">
+<meta name="theme-color" content="#103A56">
+
+<!-- Installable app -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+
+<!-- iPhone / iPad -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CMAK Ops Hub">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<script>
+  /* ================================================================
+     THE ONLY LINE YOU NEED TO CHANGE.
+     Paste your Apps Script web-app address here
+     (Apps Script ▸ Deploy ▸ Manage deployments ▸ Web app ▸ URL).
+     It must end in /exec — not /dev.
+     ================================================================ */
+  var CMAK_EXEC_URL = 'https://script.google.com/macros/s/AKfycbzlUuFNof3xFgA7ygcjDHEsD2zN8li90SPieuKbQ9RM0iQM6gUFg5iSpl44FjKY3d4E/exec';
+</script>
+
+<style>
+  :root{
+    --navy:#103A56; --cream:#F7F4EE; --gold:#B98F1F; --red:#C00000; --ink:#1d2730;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--navy);overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+  /* The status-bar strip stays navy; the app fills the rest */
+  #wrap{position:fixed;inset:0;padding-top:env(safe-area-inset-top);background:var(--navy)}
+  #app{display:block;width:100%;height:100%;border:0;background:var(--cream)}
+
+  /* Splash / offline / setup screens */
+  .screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;padding:24px;padding-top:calc(24px + env(safe-area-inset-top));
+    background:var(--cream);color:var(--ink);text-align:center;z-index:5;transition:opacity .35s ease}
+  .screen[hidden]{display:none}
+  .screen.fade{opacity:0;pointer-events:none}
+  .crest{width:112px;height:auto}
+  .title{font-size:20px;font-weight:700;color:var(--navy);margin:4px 0 0}
+  .sub{font-size:13px;color:#5b6670;margin:0;max-width:320px;line-height:1.45}
+  .motto{font-size:12px;color:var(--red);font-style:italic;letter-spacing:.2px}
+  .bar{width:140px;height:3px;border-radius:3px;background:#e4ded2;overflow:hidden;margin-top:6px}
+  .bar i{display:block;width:40%;height:100%;background:var(--gold);border-radius:3px;animation:slide 1.1s ease-in-out infinite}
+  @keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
+  .btn{appearance:none;border:0;border-radius:10px;padding:12px 22px;font-size:15px;font-weight:600;
+    background:var(--navy);color:#fff;cursor:pointer;margin-top:6px}
+  .btn:active{transform:translateY(1px)}
+  .slow{font-size:12px;color:#5b6670;margin-top:4px}
+  .slow a{color:var(--navy)}
+  @media (prefers-reduced-motion:reduce){.bar i{animation:none;width:100%}}
+</style>
+</head>
+<body>
+
+<div id="wrap">
+  <iframe id="app" title="CMAK Operations Hub"
+          allow="clipboard-read; clipboard-write; fullscreen"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
+
+<!-- Loading -->
+<section id="splash" class="screen" aria-live="polite">
+  <img class="crest" src="icon-512.png" alt="CMAK crest">
+  <p class="title">CMAK Operations Hub</p>
+  <p class="sub">St. Veronica Catholic Parish, Syokimau</p>
+  <p class="motto">Good Family, Good Church, Good Society</p>
+  <div class="bar"><i></i></div>
+  <p class="slow" id="slow" hidden>Still loading… slow connection?
+    <a href="#" id="reload1">Try again</a></p>
+</section>
+
+<!-- No internet -->
+<section id="offline" class="screen" hidden>
+  <img class="crest" src="icon-512.png" alt="">
+  <p class="title">You're offline</p>
+  <p class="sub">The register is kept live on the association's Google Sheet, so it needs an internet connection. Connect to Wi-Fi or mobile data and try again.</p>
+  <button class="btn" id="retry">Try again</button>
+</section>
+
+<!-- Not configured yet (only the person setting this up will ever see this) -->
+<section id="setup" class="screen" hidden>
+  <img class="crest" src="icon-512.png" alt="">
+  <p class="title">Almost there</p>
+  <p class="sub">Open <b>app/index.html</b> on GitHub and paste the Apps Script web-app address (ending in <b>/exec</b>) into <b>CMAK_EXEC_URL</b>.</p>
+</section>
+
+<script>
+(function(){
+  var frame   = document.getElementById('app');
+  var splash  = document.getElementById('splash');
+  var offline = document.getElementById('offline');
+  var setup   = document.getElementById('setup');
+  var slow    = document.getElementById('slow');
+  var slowTimer = null, loaded = false;
+
+  function show(el){ [splash,offline,setup].forEach(function(s){ s.hidden = (s!==el); s.classList.remove('fade'); }); }
+  function hideAll(){ splash.classList.add('fade'); setTimeout(function(){ splash.hidden = true; }, 400); }
+
+  function configured(){
+    return /^https:\/\/script\.google\.com\/.+\/exec(\?.*)?$/.test(CMAK_EXEC_URL);
+  }
+
+  function load(){
+    if (!configured()) { show(setup); return; }
+    if (!navigator.onLine) { show(offline); return; }
+    loaded = false;
+    show(splash); slow.hidden = true;
+    clearTimeout(slowTimer);
+    slowTimer = setTimeout(function(){ if(!loaded) slow.hidden = false; }, 15000);
+    // Always the officials' register — never ?page=register or ?page=form
+    frame.src = CMAK_EXEC_URL.split('?')[0] + '?app=1';
+  }
+
+  frame.addEventListener('load', function(){
+    if (!frame.getAttribute('src')) return;
+    loaded = true; clearTimeout(slowTimer); hideAll();
+  });
+
+  document.getElementById('retry').onclick = load;
+  document.getElementById('reload1').onclick = function(e){ e.preventDefault(); load(); };
+
+  window.addEventListener('offline', function(){ if(!loaded) show(offline); });
+  window.addEventListener('online',  function(){ if(!offline.hidden) load(); });
+
+  load();
+
+  // Offline support for the app shell (splash, icons, offline screen)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>
